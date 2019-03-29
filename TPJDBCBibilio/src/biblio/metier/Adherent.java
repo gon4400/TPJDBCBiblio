@@ -48,4 +48,22 @@ public class Adherent extends Utilisateur {
 
 	}
 
+	public static int getNbMaxPrets() {
+		return nbMaxPrets;
+	}
+
+	public static void setNbMaxPrets(int nbMaxPrets) {
+		Adherent.nbMaxPrets = nbMaxPrets;
+	}
+
+	public static int getDureeMaxPrets() {
+		return dureeMaxPrets;
+	}
+
+	public static void setDureeMaxPrets(int dureeMaxPrets) {
+		Adherent.dureeMaxPrets = dureeMaxPrets;
+	}
+	
+	
+
 }

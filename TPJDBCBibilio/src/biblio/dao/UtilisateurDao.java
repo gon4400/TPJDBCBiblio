@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import biblio.metier.Adherent;
+import biblio.metier.Employe;
+import biblio.metier.EnumCategorieEmploye;
 import biblio.metier.EnumStatusExemplaire;
 import biblio.metier.Exemplaire;
 import biblio.metier.Livre;
@@ -23,7 +25,8 @@ public class UtilisateurDao {
 	}
 
 	public Utilisateur findByKey(int idUtilisateur) throws SQLException {
-		PreparedStatement pstmt = cnx.prepareStatement("SELECT * FROM Utilisateur WHERE idUtilisateur=?");
+		PreparedStatement pstmt = cnx
+				.prepareStatement("select * from utilisateur,adherent,employe  where utilisateur.idutilisateur=?");
 		pstmt.setInt(1, idUtilisateur);
 		ResultSet rs = pstmt.executeQuery();
 		Utilisateur u = null;
@@ -31,25 +34,34 @@ public class UtilisateurDao {
 		boolean next = rs.next();
 
 		if (next) {
-			int idutilisateur = rs.getInt("idUtilisateur");
+			int id = rs.getInt(1);
 			String nom = rs.getString("nom");
 			String prenom = rs.getString("prenom");
 			String pseudonyme = rs.getString("pseudonyme");
 			String pwd = rs.getString("pwd");
 			Date dateNaissance = rs.getDate("dateNaissance");
 			String sexe = rs.getString("sexe");
-			 String cat = rs.getString("categorieutilisateur");
-			u = new Utilisateur(nom, prenom, dateNaissance, sexe, idutilisateur, pwd, pseudonyme,cat); // ici, mapping Objet
-			/*if (u.getCat().equals("ADHERENT")) {
-				u = new Adherent(nom, prenom, dateNaissance,sexe,idutilisateur,pwd,pseudonyme,cat);
-		
+			String cat = rs.getString("categorieutilisateur");
+			String telephone = "telephone";
+
+			u = new Utilisateur(nom, prenom, dateNaissance, sexe, id, pwd, pseudonyme, cat); // ici, mapping
+																								// Objet
+			if (cat.equals("ADHERENT")) {
+
+				u = new Adherent(nom, prenom, dateNaissance, sexe, id, pwd, pseudonyme, telephone, cat);
+
 			}
-			if (u.getCat().equals("EMPLOYE")) {
-				code = result.getString(7);
-				cat_employe = result.getString(8);
-				EnumCategorieEmploye cat2 = EnumCategorieEmploye.valueOf(cat_employe.toLowerCase());
-				user = new Employe(nom, prenom, id, pwd, code, cat2);
-			}*/
+			if (cat.equals("EMPLOYE")) {
+				String code = rs.getString("codematricule");
+				EnumCategorieEmploye status = null;
+				if (rs.getString("categorieemploye").toLowerCase().equals("BIBLIOTHECAIRE".toLowerCase()))
+					status = EnumCategorieEmploye.BIBLIOTHECAIRE;
+				else if (rs.getString("categorieemploye".toLowerCase()).equals("GESTIONNAIRE".toLowerCase()))
+					status = EnumCategorieEmploye.GESTIONNAIRE;
+				else
+					status = EnumCategorieEmploye.RESPONSABLE;
+				u = new Employe(nom, prenom, dateNaissance, sexe, id, pwd, pseudonyme, code, status, cat);
+			}
 			// Relationel
 		} else {
 			u = null;
@@ -62,7 +74,12 @@ public class UtilisateurDao {
 	public ArrayList<Utilisateur> findall() throws SQLException {
 		Statement stmt = cnx.createStatement();
 		ArrayList<Utilisateur> listeUtilisateur = new ArrayList<Utilisateur>();
-		ResultSet rs = stmt.executeQuery("select * FROM Utilisateur");
+		Utilisateur user = null;
+		ResultSet rs = stmt.executeQuery(
+				"select utilisateur.idutilisateur, utilisateur.pwd, utilisateur.nom, utilisateur.prenom, categorieutilisateur, telephone, codematricule, categorieemploye "
+						+ "from utilisateur, adherent, employe "
+						+ "where utilisateur.idutilisateur=adherent.idutilisateur (+) "
+						+ "and utilisateur.idutilisateur=employe.idutilisateur (+)");
 		while (rs.next()) {
 			int idutilisateur = rs.getInt("idUtilisateur");
 			String nom = rs.getString("nom");
@@ -71,11 +88,21 @@ public class UtilisateurDao {
 			String pwd = rs.getString("pwd");
 			Date dateNaissance = rs.getDate("dateNaissance");
 			String sexe = rs.getString("sexe");
-			String cat=rs.getString("categorieutilisateur");
-			Utilisateur u = new Utilisateur(nom, prenom, dateNaissance, sexe, idutilisateur, pwd, pseudonyme,cat);// mapping
-																												// Objet
-																												// Relationel
-			listeUtilisateur.add(u);
+			String cat = rs.getString("categorieutilisateur");
+			String id = "";
+			String tel = "";
+			String code = "";
+			String cat_employe = "";
+			if (cat.equals("ADHERENT")) {
+				tel = rs.getString(6);
+				user = new Adherent(nom, prenom, dateNaissance, sexe, idutilisateur, pwd, pseudonyme, tel, cat);
+			}
+			if (cat.equals("EMPLOYE")) {
+				code = rs.getString(7);
+				cat_employe = rs.getString(8);
+				EnumCategorieEmploye cat2 = EnumCategorieEmploye.valueOf(cat_employe.toLowerCase());
+				user = new Employe(nom, prenom, dateNaissance, sexe, idutilisateur, pwd, pseudonyme, code, cat2, cat);
+			}
 
 		}
 

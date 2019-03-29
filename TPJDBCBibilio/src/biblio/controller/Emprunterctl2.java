@@ -15,6 +15,7 @@ import biblio.dao.EmpruntEnCoursDao;
 import biblio.dao.EmpruntEnCoursDb;
 import biblio.dao.ExemplaireDao;
 import biblio.dao.UtilisateurDao;
+import biblio.metier.Adherent;
 import biblio.metier.BiblioException;
 import biblio.metier.EmpruntArchive;
 import biblio.metier.EmpruntEnCours;
@@ -40,13 +41,14 @@ public class Emprunterctl2 {
 	private static Utilisateur u1;
 	private static FenetreEmprunt2 fenetreemprunt;
 	private static FenetreRetour2 fenetreretour;
-
+	static Adherent unAdherent = null;
 	public static void main(String[] args) {
 
 		if (fenetrechoix != null) {
 			fenetrechoix.frame.dispose();
 		}
 		Connection cnx = null;
+		
 		try {
 			cnx = ConnectionFactory.getConnection("oracle.jdbc.driver.OracleDriver",
 					"jdbc:oracle:thin:@localhost:1521:xe", "biblio", "biblio");
@@ -58,7 +60,7 @@ public class Emprunterctl2 {
 		DBEEC = new EmpruntEnCoursDao(cnx);
 		DBEA = new EmpruntArchiveDao(cnx);
 		DBU = new UtilisateurDao(cnx);
-
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -86,7 +88,8 @@ public class Emprunterctl2 {
 		{
 			try 
 			{
-				u1=DBU.findByKey(Integer.parseInt(id));
+				unAdherent = (Adherent) u1;
+				u1 = DBU.findByKey(Integer.parseInt((id)));
 			}
 			catch(SQLException e2)
 			{
@@ -218,11 +221,31 @@ public class Emprunterctl2 {
 			emprunter();
 			return;
 		}
-		if (!u1.isConditionsPretAcceptees()) { 
+	
+		boolean conditionsAcceptees = false;
+		if (u1 instanceof Adherent) {
+		
+			unAdherent = (Adherent) u1;
+			if (!unAdherent.isConditionsPretAcceptees()) {
+				JOptionPane.showMessageDialog(null,
+						"Pret refuse\nNb de prets :"
+								+ unAdherent.getNbEmpruntsEnCours()
+								+ ". Maximum :" + Adherent.getNbMaxPrets()
+								+ "\nNb de retards :"
+								+ unAdherent.getNbRetards());
+			} else {
+				conditionsAcceptees = true;
+				emprunter();
+			}
+		
+		/*if (unAdherent.isConditionsPretAcceptees()) { 
 			JOptionPane.showMessageDialog(null, "Conditions non respectées");
 			emprunter();
 			return;
-		}
+		}*/
+		
+		
+		
 		if (e1.getStatus() != EnumStatusExemplaire.DISPONIBLE) {
 	
 			JOptionPane.showMessageDialog(null, "Livre non disponible");
@@ -245,6 +268,7 @@ public class Emprunterctl2 {
 		}
 		JOptionPane.showMessageDialog(null, "Emprunt effectué");
 		choix();
+		}
 	}
 
 	public static void effectuerRetour(String idExemplaire) throws Exception {

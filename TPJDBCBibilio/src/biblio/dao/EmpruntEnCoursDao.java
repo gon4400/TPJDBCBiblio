@@ -104,7 +104,8 @@ public class EmpruntEnCoursDao {
 			String pwd = rs.getString("pwd");
 			Date dateNaissance = rs.getDate("dateNaissance");
 			String sexe = rs.getString("sexe");
-			Utilisateur u = new Utilisateur(nom, prenom, dateNaissance, sexe, idutilisateur, pwd, pseudonyme);// mapping
+			String cat=rs.getString("categorieutilisateur");
+			Utilisateur u = new Utilisateur(nom, prenom, dateNaissance, sexe, idutilisateur, pwd, pseudonyme,cat);// mapping
 																												// Objet
 																												// Relationel
 			listeUtilisateur.add(u);
