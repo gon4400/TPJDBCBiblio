@@ -22,30 +22,30 @@ import biblio.metier.EmpruntEnCours;
 import biblio.metier.EnumStatusExemplaire;
 import biblio.metier.Exemplaire;
 import biblio.metier.Utilisateur;
-import biblio.ui.FenetreChoix2;
-import biblio.ui.FenetreConnexion2;
-import biblio.ui.FenetreEmprunt2;
-import biblio.ui.FenetreListeEmprunt2;
-import biblio.ui.FenetreRetour2;
+import biblio.ui.FenetreAccueil;
+import biblio.ui.FenetreConnexion;
+import biblio.ui.FenetreEmprunt;
+import biblio.ui.FenetreListeEmprunt;
+import biblio.ui.FenetreRetour;
 
-public class Emprunterctl2 {
+public class Emprunterctl {
 
-	private static FenetreConnexion2 fenetreconnexion;
-	private static FenetreChoix2 fenetrechoix;
-	private static FenetreListeEmprunt2 fenetrelisteemprunt;
+	private static FenetreConnexion fenetreconnexion;
+	private static FenetreAccueil fenetreaccueil;
+	private static FenetreListeEmprunt fenetrelisteemprunt;
 	public static SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 	private static ExemplaireDao DBExemplaire;
 	private static EmpruntEnCoursDao DBEEC;
 	private static EmpruntArchiveDao DBEA;
 	private static UtilisateurDao DBU;
 	private static Utilisateur u1;
-	private static FenetreEmprunt2 fenetreemprunt;
-	private static FenetreRetour2 fenetreretour;
+	private static FenetreEmprunt fenetreemprunt;
+	private static FenetreRetour fenetreretour;
 	static Adherent unAdherent = null;
 	public static void main(String[] args) {
 
-		if (fenetrechoix != null) {
-			fenetrechoix.frame.dispose();
+		if (fenetreaccueil != null) {
+			fenetreaccueil.frame.dispose();
 		}
 		Connection cnx = null;
 		
@@ -64,7 +64,7 @@ public class Emprunterctl2 {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					fenetreconnexion = new FenetreConnexion2();
+					fenetreconnexion = new FenetreConnexion();
 					fenetreconnexion.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -139,7 +139,7 @@ public class Emprunterctl2 {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					fenetreemprunt = new FenetreEmprunt2();
+					fenetreemprunt = new FenetreEmprunt();
 					fenetreemprunt.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -158,7 +158,7 @@ public class Emprunterctl2 {
 					for (EmpruntEnCours eec : u1.getEmpruntEnCours()) {
 						listeExem.add(eec.getExemplaire());
 					}
-					fenetreretour = new FenetreRetour2(listeExem);
+					fenetreretour = new FenetreRetour(listeExem);
 					fenetreretour.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -172,7 +172,7 @@ public class Emprunterctl2 {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					fenetrelisteemprunt = new FenetreListeEmprunt2(u1.getEmpruntEnCours());
+					fenetrelisteemprunt = new FenetreListeEmprunt(u1.getEmpruntEnCours());
 					fenetrelisteemprunt.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -195,8 +195,8 @@ public class Emprunterctl2 {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					fenetrechoix = new FenetreChoix2();
-					fenetrechoix.frame.setVisible(true);
+					fenetreaccueil = new FenetreAccueil();
+					fenetreaccueil.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

@@ -1,22 +1,77 @@
 package biblio.ui;
 
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+import java.awt.List;
+import java.awt.Panel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+import biblio.controller.Emprunterctl;
 import biblio.metier.EmpruntEnCours;
-import biblio.metier.Exemplaire;
-import biblio.metier.Utilisateur;
 
 public class FenetreListeEmprunt {
-	public static void creationFenetre(Utilisateur u)
-	{
-		String emprunt="Vos Emprunts :\n";
-		for(EmpruntEnCours eec : u.getEmpruntEnCours())
-		{
-			Exemplaire e = eec.getExemplaire();
-			emprunt+="IdExemplaire : "+ e.getIdExemplaire()+" / Date de l'emprunt : "
-			+(eec.getDateEmprunt())+"\n";
-		}
-		JOptionPane.showMessageDialog(new JFrame(), emprunt, "ListeEmprunt", JOptionPane.INFORMATION_MESSAGE);
+
+	public JFrame frame;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					FenetreListeEmprunt window = new FenetreListeEmprunt(null);
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
+
+	/**
+	 * Create the application.
+	 */
+	public FenetreListeEmprunt(ArrayList<EmpruntEnCours> listeEmprunt) {
+		initialize(listeEmprunt);
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize(ArrayList<EmpruntEnCours> listeEmprunt) {
+		frame = new JFrame();
+		frame.setTitle("liste d'emprunt");
+		frame.setBounds(100, 100, 450, 300);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		JPanel panel = new JPanel();
+		frame.getContentPane().add(panel, BorderLayout.CENTER);
+		panel.setLayout(null);
+		
+		List list = new List();
+		list.setBounds(38, 29, 209, 202);
+		for(EmpruntEnCours eec:listeEmprunt)
+		{
+			list.add(eec.getExemplaire().getIdExemplaire()+" "+eec.getDateEmprunt());
+		}
+		panel.add(list);
+		
+		JButton btnRetour = new JButton("Retour");
+		btnRetour.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Emprunterctl.choix();
+			}
+		});
+		btnRetour.setBounds(304, 128, 89, 23);
+		panel.add(btnRetour);
+		
+		
+	}
+
 }

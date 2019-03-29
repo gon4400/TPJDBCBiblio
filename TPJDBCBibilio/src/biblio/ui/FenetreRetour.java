@@ -1,27 +1,89 @@
 package biblio.ui;
 
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+import java.awt.List;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
-import biblio.metier.EmpruntEnCours;
-import biblio.metier.Utilisateur;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+import biblio.controller.Emprunterctl;
+import biblio.metier.Exemplaire;
 
 public class FenetreRetour {
-	public static int creationFenetreRetour(String pseudo,Utilisateur u)
-	{
-		if(u.getNbEmpruntsEnCours()==0)
-		{
-			JOptionPane.showMessageDialog(null, "Vous n'avez pas d'emprunt en cours");
-			return -1;
-		}
-		Object[] possibilities = new Object[u.getNbEmpruntsEnCours()];
-		int i = 0;
-		for(EmpruntEnCours eec : u.getEmpruntEnCours())
-		{
-			possibilities[i]=eec.getExemplaire().getIdExemplaire();
-			i++;
-		}
-		//Object[] possibilities = {"emprunt", "retour"};
-		return (int)JOptionPane.showInputDialog(new JFrame(), "Bienvenue "+pseudo+"\nEntrez l'id de l'exemplaire que vous voulez rendre : ", "BiblioRetour", JOptionPane.PLAIN_MESSAGE,null,possibilities,null);
+
+	public JFrame frame;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					FenetreRetour window = new FenetreRetour(null);
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
+
+	/**
+	 * Create the application.
+	 */
+	public FenetreRetour(ArrayList<Exemplaire> listeExem) {
+		initialize(listeExem);
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize(ArrayList<Exemplaire> listeExem) {
+		frame = new JFrame();
+		frame.setTitle("Retour");
+		frame.setBounds(100, 100, 450, 300);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		JPanel panel = new JPanel();
+		frame.getContentPane().add(panel, BorderLayout.CENTER);
+		panel.setLayout(null);
+		
+		List list = new List();
+		for(Exemplaire e : listeExem)
+		{
+			list.add(Integer.toString(e.getIdExemplaire()));
+		}
+		list.setBounds(54, 32, 76, 182);
+		panel.add(list);
+		
+		JButton btnNewButton = new JButton("Rendre");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					Emprunterctl.effectuerRetour(list.getSelectedItem());
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		btnNewButton.setBounds(255, 76, 89, 23);
+		panel.add(btnNewButton);
+		
+		JButton btnNewButton_1 = new JButton("Retour");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Emprunterctl.choix();
+			}
+		});
+		btnNewButton_1.setBounds(255, 152, 89, 23);
+		panel.add(btnNewButton_1);
+	}
+
 }
