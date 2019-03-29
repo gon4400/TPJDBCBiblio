@@ -37,7 +37,8 @@ public class EmprunterCtl {
 		ArrayList<EmpruntEnCoursDb> listEmpruntEnCoursDb = new ArrayList<EmpruntEnCoursDb>();
 		listEmpruntEnCoursDb = DBEC.findbyUtilisateur(u1);
 		for (EmpruntEnCoursDb empruntEnCoursDB : listEmpruntEnCoursDb) {
-			u1.addEmpruntEnCours(new EmpruntEnCours(empruntEnCoursDB.getDateEmprunt(),u1,DBEx.findByKey(empruntEnCoursDB.getIdExemplaire()),empruntEnCoursDB.getIdEmpruntEnCours()));	}
+			u1.addEmpruntEnCours(new EmpruntEnCours(empruntEnCoursDB.getDateEmprunt()
+					,u1,DBEx.findByKey(empruntEnCoursDB.getIdExemplaire()),empruntEnCoursDB.getIdEmpruntEnCours()));	}
 
 	}
 	public static void main(String[] args) throws Exception {

@@ -8,17 +8,37 @@ public class Utilisateur extends Personne {
 	private int idUtilisateur;
 	private String pwd;
 	private String pseudonyme;
+	private String cat;
 	private ArrayList<EmpruntEnCours> empruntEnCours = new ArrayList<>();
 
 	public Utilisateur(String nom, String prenom, Date dateNaissance, String sexe, int idUtilisateur, String pwd,
-			String pseudonyme) {
+			String pseudonyme,String cat) {
 		super(nom, prenom, dateNaissance, sexe);
 		this.idUtilisateur = idUtilisateur;
 		this.pwd = pwd;
 		this.pseudonyme = pseudonyme;
-	
-
+		this.cat=cat;
 	}
+
+	
+	
+	public String getCat() {
+		return cat;
+	}
+
+
+
+	public void setCat(String cat) {
+		this.cat = cat;
+	}
+
+
+
+	public void setEmpruntEnCours(ArrayList<EmpruntEnCours> empruntEnCours) {
+		this.empruntEnCours = empruntEnCours;
+	}
+
+
 
 	public ArrayList<EmpruntEnCours> getEmpruntEnCours() {
 		return empruntEnCours;

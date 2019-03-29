@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 
+import biblio.metier.Adherent;
 import biblio.metier.EnumStatusExemplaire;
 import biblio.metier.Exemplaire;
 import biblio.metier.Livre;
@@ -37,9 +38,19 @@ public class UtilisateurDao {
 			String pwd = rs.getString("pwd");
 			Date dateNaissance = rs.getDate("dateNaissance");
 			String sexe = rs.getString("sexe");
-
-			u = new Utilisateur(nom, prenom, dateNaissance, sexe, idutilisateur, pwd, pseudonyme); // ici, mapping Objet
-																									// Relationel
+			 String cat = rs.getString("categorieutilisateur");
+			u = new Utilisateur(nom, prenom, dateNaissance, sexe, idutilisateur, pwd, pseudonyme,cat); // ici, mapping Objet
+			/*if (u.getCat().equals("ADHERENT")) {
+				u = new Adherent(nom, prenom, dateNaissance,sexe,idutilisateur,pwd,pseudonyme,cat);
+		
+			}
+			if (u.getCat().equals("EMPLOYE")) {
+				code = result.getString(7);
+				cat_employe = result.getString(8);
+				EnumCategorieEmploye cat2 = EnumCategorieEmploye.valueOf(cat_employe.toLowerCase());
+				user = new Employe(nom, prenom, id, pwd, code, cat2);
+			}*/
+			// Relationel
 		} else {
 			u = null;
 		}
@@ -60,7 +71,8 @@ public class UtilisateurDao {
 			String pwd = rs.getString("pwd");
 			Date dateNaissance = rs.getDate("dateNaissance");
 			String sexe = rs.getString("sexe");
-			Utilisateur u = new Utilisateur(nom, prenom, dateNaissance, sexe, idutilisateur, pwd, pseudonyme);// mapping
+			String cat=rs.getString("categorieutilisateur");
+			Utilisateur u = new Utilisateur(nom, prenom, dateNaissance, sexe, idutilisateur, pwd, pseudonyme,cat);// mapping
 																												// Objet
 																												// Relationel
 			listeUtilisateur.add(u);

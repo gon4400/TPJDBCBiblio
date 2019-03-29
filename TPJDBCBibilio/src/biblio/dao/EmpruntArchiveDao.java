@@ -29,10 +29,10 @@ public class EmpruntArchiveDao {
 	public void insertEmpruntArchive(EmpruntArchive ea) throws Exception {
 		PreparedStatement pstmt = cnx.prepareStatement("INSERT INTO EMPRUNTARCHIVE VALUES(?,?,?,?,?)");
 		pstmt.setInt(1, ea.getIdempruntArchive());
-		pstmt.setInt(5, ea.getEmprunteur().getIdUtilisateur());
+		pstmt.setInt(2, ea.getEmprunteur().getIdUtilisateur());
 		pstmt.setDate(3, new Date(ea.getDateRestitutionEff().getTime()));
 		pstmt.setInt(4, ea.getExemplaire().getIdExemplaire());
-		pstmt.setDate(2, new Date(ea.getDateEmprunt().getTime()));
+		pstmt.setDate(5, new Date(ea.getDateEmprunt().getTime()));
 
 		pstmt.executeUpdate();
 		return;

@@ -8,6 +8,9 @@ import java.awt.BorderLayout;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+
+import biblio.controller.Emprunterctl2;
+
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -21,7 +24,7 @@ import java.awt.GridLayout;
 
 public class FenetreConnexion2 {
 
-	private JFrame frame;
+	public JFrame frame;
 	private JTextField textField;
 	private JTextField textField_1;
 	private JPanel panel_1;
@@ -94,8 +97,12 @@ public class FenetreConnexion2 {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-				FenetreAccueil2 window = new FenetreAccueil2();
-				window.frame.setVisible(true);
+				try {
+					Emprunterctl2.connection(textField.getText(), textField_1.getText());
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 		panel_2.add(btnNewButton);
@@ -111,8 +118,8 @@ public class FenetreConnexion2 {
 		BufferedImage myPicture = null;
 		BufferedImage myPicture2=null;
 		try {
-			myPicture = ImageIO.read(new File("D:\\Tp_Java\\Workspace_Pierre\\TPJDBCBibilio\\src\\biblio\\logo-biblio.jpg"));
-			myPicture2 = ImageIO.read(new File("D:\\Tp_Java\\Workspace_Pierre\\TPJDBCBibilio\\src\\biblio\\bienvenue.jpg"));
+			myPicture = ImageIO.read(new File("C:\\Users\\admin\\git\\TPJDBCBiblio\\TPJDBCBibilio\\src\\biblio\\logo-biblio.jpg"));
+			myPicture2 = ImageIO.read(new File("C:\\Users\\admin\\git\\TPJDBCBiblio\\TPJDBCBibilio\\src\\biblio\\bienvenue.jpg"));
 		JPanel panel_3 = new JPanel();
 		panel_3.setBounds(10, 11, 190, 239);
 		frame.getContentPane().add(panel_3);

@@ -10,8 +10,8 @@ public class Adherent extends Utilisateur {
 	
 
 	public Adherent(String nom, String prenom, Date dateNaissance, String sexe, int idUtilisateur, String pwd,
-			String pseudonyme, String telephone) {
-		super(nom, prenom, dateNaissance, sexe, idUtilisateur, pwd, pseudonyme);
+			String pseudonyme, String telephone,String cat) {
+		super(nom, prenom, dateNaissance, sexe, idUtilisateur, pwd, pseudonyme,cat);
 		this.telephone = telephone;
 
 	}
