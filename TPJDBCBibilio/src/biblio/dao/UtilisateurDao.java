@@ -16,6 +16,7 @@ import biblio.metier.Exemplaire;
 import biblio.metier.Livre;
 import biblio.metier.Utilisateur;
 
+
 public class UtilisateurDao {
 
 	Connection cnx = null;
@@ -46,6 +47,9 @@ public class UtilisateurDao {
 
 			u = new Utilisateur(nom, prenom, dateNaissance, sexe, id, pwd, pseudonyme, cat); // ici, mapping
 																								// Objet
+		
+	
+			
 			if (cat.equals("ADHERENT")) {
 
 				u = new Adherent(nom, prenom, dateNaissance, sexe, id, pwd, pseudonyme, telephone, cat);

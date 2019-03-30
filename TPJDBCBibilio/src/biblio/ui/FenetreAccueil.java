@@ -57,6 +57,7 @@ public class FenetreAccueil {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setResizable(false);
+		frame.setTitle("accueil");
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -95,20 +96,26 @@ public class FenetreAccueil {
 		
 		JPanel panel_2 = new JPanel();
 		frame.getContentPane().add(panel_2, BorderLayout.NORTH);
-		panel_2.setLayout(new BorderLayout(0, 0));
+		panel_2.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 10));
 		BufferedImage myPicture;
 		try {
-			myPicture = ImageIO.read(new File("C:\\Users\\admin\\git\\TPJDBCBiblio\\TPJDBCBibilio\\"
-					+ "src\\biblio\\accueil_rond.gif"));
+			myPicture = ImageIO.read(new File("./src/bienvenue.jpg"));
 		
+		JLabel lblNewLabel = new JLabel(new ImageIcon(myPicture));
+		lblNewLabel.setVerticalAlignment(SwingConstants.TOP);
+		lblNewLabel.setHorizontalAlignment(SwingConstants.LEFT);
+		panel_2.add(lblNewLabel);
+	
 		JPanel panel_3 = new JPanel();
 		frame.getContentPane().add(panel_3, BorderLayout.CENTER);
-		panel_3.setLayout(new BorderLayout(100, 100));
+		panel_3.setLayout(new FlowLayout(FlowLayout.CENTER, 100, 20));
 		
 		JLabel lblNewLabel_1 = new JLabel("Que voulez-vous faire?");
 		lblNewLabel_1.setFont(new Font("Wide Latin", Font.BOLD, 13));
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
-		panel_3.add(lblNewLabel_1, BorderLayout.CENTER);
+		panel_3.add(lblNewLabel_1);
+		
+	
 		
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

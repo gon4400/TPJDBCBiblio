@@ -1,5 +1,6 @@
 package biblio.metier;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -98,4 +99,10 @@ public class Utilisateur extends Personne {
 	}
 
 
+	
+	public static void main(String[] args) {
+		
+		File directory = new File("./src/logo-biblio.jpg");
+	    System.out.println(directory.getAbsolutePath());
+	}
 }

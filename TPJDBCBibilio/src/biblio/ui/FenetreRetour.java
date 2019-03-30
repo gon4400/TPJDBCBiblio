@@ -1,19 +1,29 @@
 package biblio.ui;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
-import java.awt.List;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.sql.SQLException;
-import java.util.ArrayList;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 import biblio.controller.Emprunterctl;
 import biblio.metier.Exemplaire;
+
+import java.awt.BorderLayout;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import java.awt.FlowLayout;
+import java.awt.List;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class FenetreRetour {
 
@@ -47,43 +57,58 @@ public class FenetreRetour {
 	 */
 	private void initialize(ArrayList<Exemplaire> listeExem) {
 		frame = new JFrame();
-		frame.setTitle("Retour");
+		frame.setTitle("Retour du livre");
 		frame.setBounds(100, 100, 450, 300);
+		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		JPanel panel = new JPanel();
-		frame.getContentPane().add(panel, BorderLayout.CENTER);
-		panel.setLayout(null);
+		BufferedImage myPicture;
+		try {
+			myPicture = ImageIO.read(new File("./src/retour.png"));
+		JPanel panel_2 = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) panel_2.getLayout();
+		flowLayout.setVgap(80);
+		frame.getContentPane().add(panel_2, BorderLayout.CENTER);
 		
-		List list = new List();
+		List list_1 = new List();
+		
 		for(Exemplaire e : listeExem)
 		{
-			list.add(Integer.toString(e.getIdExemplaire()));
+			list_1.add(Integer.toString(e.getIdExemplaire()));
 		}
-		list.setBounds(54, 32, 76, 182);
-		panel.add(list);
+		JPanel panel_1 = new JPanel();
+		FlowLayout flowLayout_1 = (FlowLayout) panel_1.getLayout();
+		flowLayout_1.setHgap(20);
+		flowLayout_1.setVgap(10);
+		frame.getContentPane().add(panel_1, BorderLayout.SOUTH);
+		
+		JButton btnNewButton_1  = new JButton("Retour");
+		panel_1.add(btnNewButton_1);
 		
 		JButton btnNewButton = new JButton("Rendre");
+		panel_1.add(btnNewButton_1);
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					Emprunterctl.effectuerRetour(list.getSelectedItem());
+					Emprunterctl.effectuerRetour(list_1.getSelectedItem());
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
 		});
-		btnNewButton.setBounds(255, 76, 89, 23);
-		panel.add(btnNewButton);
-		
-		JButton btnNewButton_1 = new JButton("Retour");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Emprunterctl.choix();
 			}
 		});
-		btnNewButton_1.setBounds(255, 152, 89, 23);
-		panel.add(btnNewButton_1);
+		
+		panel_1.add(btnNewButton);
+		
+		panel_2.add(list_1);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 
 }

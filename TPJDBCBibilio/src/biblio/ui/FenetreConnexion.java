@@ -18,9 +18,14 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.awt.event.ActionEvent;
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Font;
 
 public class FenetreConnexion {
 
@@ -54,11 +59,13 @@ public class FenetreConnexion {
 
 	/**
 	 * Initialize the contents of the frame.
+	 * @throws FileNotFoundException 
 	 */
-	private void initialize() {
+	private void initialize()  {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 300);
 		frame.setTitle("Connexion");
+		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
@@ -76,7 +83,7 @@ public class FenetreConnexion {
 		panel_1 = new JPanel();
 		FlowLayout fl_panel_1 = (FlowLayout) panel_1.getLayout();
 		fl_panel_1.setVgap(20);
-		panel_1.setBounds(324, 89, 120, 100);
+		panel_1.setBounds(304, 89, 120, 100);
 		frame.getContentPane().add(panel_1);
 		
 		textField = new JTextField();
@@ -115,11 +122,10 @@ public class FenetreConnexion {
 			}
 		});
 		panel_2.add(btnNewButton_1);
-		BufferedImage myPicture = null;
-		BufferedImage myPicture2=null;
 		try {
-			myPicture = ImageIO.read(new File("C:\\Users\\admin\\git\\TPJDBCBiblio\\TPJDBCBibilio\\src\\biblio\\logo-biblio.jpg"));
-			myPicture2 = ImageIO.read(new File("C:\\Users\\admin\\git\\TPJDBCBiblio\\TPJDBCBibilio\\src\\biblio\\bienvenue.jpg"));
+			
+			BufferedImage	myPicture = ImageIO.read(new File("./src/logo-biblio.jpg"));
+			
 		JPanel panel_3 = new JPanel();
 		panel_3.setBounds(10, 11, 190, 239);
 		frame.getContentPane().add(panel_3);
@@ -134,6 +140,7 @@ public class FenetreConnexion {
 		panel_4.setLayout(new BorderLayout(0, 0));
 		
 		JLabel lblNewLabel_2 = new JLabel("Bienvenue à la biblio de Paris");
+		lblNewLabel_2.setFont(new Font("Cooper Black", Font.PLAIN, 13));
 		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
 		panel_4.add(lblNewLabel_2, BorderLayout.CENTER);
 		} catch (IOException e1) {

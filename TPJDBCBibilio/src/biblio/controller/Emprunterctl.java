@@ -9,6 +9,7 @@ import java.util.Date;
 
 import javax.swing.JOptionPane;
 
+
 import biblio.dao.ConnectionFactory;
 import biblio.dao.EmpruntArchiveDao;
 import biblio.dao.EmpruntEnCoursDao;
@@ -41,14 +42,16 @@ public class Emprunterctl {
 	private static Utilisateur u1;
 	private static FenetreEmprunt fenetreemprunt;
 	private static FenetreRetour fenetreretour;
-	static Adherent unAdherent = null;
+	 private static Adherent unAdherent = null;
+	private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
 	public static void main(String[] args) {
 
 		if (fenetreaccueil != null) {
 			fenetreaccueil.frame.dispose();
 		}
 		Connection cnx = null;
-		
+
 		try {
 			cnx = ConnectionFactory.getConnection("oracle.jdbc.driver.OracleDriver",
 					"jdbc:oracle:thin:@localhost:1521:xe", "biblio", "biblio");
@@ -60,7 +63,7 @@ public class Emprunterctl {
 		DBEEC = new EmpruntEnCoursDao(cnx);
 		DBEA = new EmpruntArchiveDao(cnx);
 		DBU = new UtilisateurDao(cnx);
-		
+
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -78,47 +81,43 @@ public class Emprunterctl {
 
 		try {
 			u1 = DBU.findByKey(Integer.parseInt((id)));
-		} catch(NumberFormatException e)
-		{
-			JOptionPane.showMessageDialog(null,"Identifiant ou mdp incorrect");		
+		} catch (NumberFormatException e) {
+			JOptionPane.showMessageDialog(null, "Identifiant ou mdp incorrect");
 			main(null);
 			return;
-		}
-		catch(SQLException e)
-		{
-			try 
-			{
+		} catch (SQLException e) {
+			try {
 				unAdherent = (Adherent) u1;
 				u1 = DBU.findByKey(Integer.parseInt((id)));
-			}
-			catch(SQLException e2)
-			{
-				JOptionPane.showMessageDialog(null,"Identifiant ou mdp incorrect");		
+			} catch (SQLException e2) {
+				JOptionPane.showMessageDialog(null, "Identifiant ou mdp incorrect");
 				main(null);
 				return;
 			}
 		}
-		if(!u1.getPwd().equals(mdp))
-		{
-			
-			JOptionPane.showMessageDialog(null,"Identifiant ou mdp incorrect");
+		if (!u1.getPwd().equals(mdp)) {
+
+			JOptionPane.showMessageDialog(null, "Identifiant ou mdp incorrect");
 			main(null);
 			return;
 		}
-		try 
-		{
+		try {
 			setEmpruntToEmprunteur(u1);
-		}
-		catch(SQLException e)
-		{
-			JOptionPane.showMessageDialog(null,e.getMessage());		
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, e.getMessage());
 			main(null);
 			return;
 		}
+		
+		// Verifier si les conditions prealables sont acceptees pour un
+		// Adherent
+		
 
 		choix();
 
 	}
+	
+	
 
 	private static void setEmpruntToEmprunteur(Utilisateur u) throws Exception {
 		ArrayList<EmpruntEnCoursDb> listEmpruntEnCoursDb = new ArrayList<EmpruntEnCoursDb>();
@@ -135,7 +134,7 @@ public class Emprunterctl {
 		if (fenetreemprunt != null) {
 			fenetreemprunt.frame.dispose();
 		}
-		//fenetrechoix.frame.dispose();
+		fenetreaccueil.frame.dispose();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -150,7 +149,7 @@ public class Emprunterctl {
 	}
 
 	public static void retour() {
-		//fenetrechoix.frame.dispose();
+		fenetreaccueil.frame.dispose();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -168,7 +167,7 @@ public class Emprunterctl {
 	}
 
 	public static void listeEmprunt() {
-		//fenetrechoix.frame.dispose();
+		fenetreaccueil.frame.dispose();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -216,59 +215,70 @@ public class Emprunterctl {
 		}
 		try {
 			e1 = DBExemplaire.findByKey(id);
+			
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
 			emprunter();
 			return;
 		}
-	
+
 		boolean conditionsAcceptees = false;
 		if (u1 instanceof Adherent) {
-		
 			unAdherent = (Adherent) u1;
-			if (!unAdherent.isConditionsPretAcceptees()) {
+			if (!u1.isConditionsPretAcceptees()) {
 				JOptionPane.showMessageDialog(null,
 						"Pret refuse\nNb de prets :"
 								+ unAdherent.getNbEmpruntsEnCours()
 								+ ". Maximum :" + Adherent.getNbMaxPrets()
 								+ "\nNb de retards :"
 								+ unAdherent.getNbRetards());
+				  JOptionPane.showMessageDialog(null, "Conditions non respectées");
 			} else {
 				conditionsAcceptees = true;
-				emprunter();
+				/*String emprunt = "18/01/2019";
+				Date dateEmpruntEffective = sdf.parse(emprunt);*/
+				
+				EmpruntEnCours eec = new EmpruntEnCours(new Date(), 1);
+				eec.setExemplaire(e1);
+				u1.addEmpruntEnCours(eec);
+				DBEEC.insertEmpruntEncours(eec);
+				DBExemplaire.updateStatus(e1);
+				JOptionPane.showMessageDialog(null, "Emprunt effectué");
+				choix();
+				
 			}
+		} else {
+			// Pas de contrainte pour un employe
+			conditionsAcceptees = true;
 		
-		/*if (unAdherent.isConditionsPretAcceptees()) { 
-			JOptionPane.showMessageDialog(null, "Conditions non respectées");
-			emprunter();
-			return;
-		}*/
-		
-		
-		
-		if (e1.getStatus() != EnumStatusExemplaire.DISPONIBLE) {
-	
-			JOptionPane.showMessageDialog(null, "Livre non disponible");
-			emprunter();
-			return;
-		}
 		
 
+			if (e1.getStatus() != EnumStatusExemplaire.DISPONIBLE) {
 
-		try {
-			EmpruntEnCours eec = new EmpruntEnCours(new Date(), 2);
-			eec.setExemplaire(e1);
-			u1.addEmpruntEnCours(eec);
-			DBEEC.insertEmpruntEncours(eec);
-			DBExemplaire.updateStatus(e1);
-		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(null, e.getMessage());
-			emprunter();
-			return;
+				JOptionPane.showMessageDialog(null, "Livre non disponible");
+				emprunter();
+				return;
+			}
+
+			
+		
+			try {
+				String emprunt = "18/01/2019";
+				Date dateEmpruntEffective = sdf.parse(emprunt);
+				EmpruntEnCours eec = new EmpruntEnCours(dateEmpruntEffective, 1);
+				eec.setExemplaire(e1);
+				u1.addEmpruntEnCours(eec);
+				DBEEC.insertEmpruntEncours(eec);
+				DBExemplaire.updateStatus(e1);
+			} catch (SQLException e) {
+				JOptionPane.showMessageDialog(null, e.getMessage());
+				emprunter();
+				return;
+			}
+			JOptionPane.showMessageDialog(null, "Emprunt effectué");
 		}
-		JOptionPane.showMessageDialog(null, "Emprunt effectué");
-		choix();
-		}
+			choix();
+		
 	}
 
 	public static void effectuerRetour(String idExemplaire) throws Exception {
@@ -296,8 +306,8 @@ public class Emprunterctl {
 			System.err.println("erreur improbable");
 			System.exit(1);
 		}
-		EmpruntArchive ea = new EmpruntArchive(new Date(), eecRetour.getDateEmprunt(),
-				eecRetour.getEmprunteur(), 1, e1);
+		EmpruntArchive ea = new EmpruntArchive(new Date(), eecRetour.getDateEmprunt(), eecRetour.getEmprunteur(), 1,
+				e1);
 		DBEA.insertEmpruntArchive(ea);
 		DBExemplaire.updateStatus(e1);
 		DBEEC.remove(eecRetour);

@@ -25,7 +25,6 @@ public class Adherent extends Utilisateur {
 	}
 
 	public int getNbRetards() {
-
 		int retour = 0;
 		Date datetoday = new Date();
 
@@ -33,19 +32,17 @@ public class Adherent extends Utilisateur {
 
 			if (e.getDateEmprunt().getTime() + dureeMaxPrets * 86400000 < datetoday.getTime())
 				retour++;
-
 		}
+
 		return retour;
 	}
-	
+
 	@Override
 	public boolean isConditionsPretAcceptees() {
-
 		if (getNbRetards() > 0 || getNbEmpruntsEnCours() >= nbMaxPrets)
 			return false;
 
 		return true;
-
 	}
 
 	public static int getNbMaxPrets() {

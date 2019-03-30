@@ -1,5 +1,6 @@
 package biblio.metier;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class EmpruntEnCours extends Emprunt {
@@ -7,7 +8,7 @@ public class EmpruntEnCours extends Emprunt {
 	private Utilisateur emprunteur;
 	private Exemplaire exemplaire;
 	private int idEmpruntEnCours;
-
+	
 
 	
 	
